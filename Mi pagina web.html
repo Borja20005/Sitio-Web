@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VapeStore Wholesale - Mayorista Premium</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00d4ff;
+            --primary-dark: #00a8cc;
+            --accent: #ff6b9d;
+            --accent-dark: #ff4d88;
+            --dark: #0a0e27;
+            --dark-light: #151b3d;
+            --card-bg: #1a1f3a;
+            --text: #ffffff;
+            --text-muted: #a0aec0;
+            --success: #00ff88;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #151b3d 50%, #1a1f3a 100%);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: -320px;
+            top: 0;
+            width: 320px;
+            height: 100vh;
+            background: linear-gradient(180deg, var(--dark-light) 0%, var(--dark) 100%);
+            border-right: 2px solid rgba(0, 212, 255, 0.2);
+            box-shadow: 5px 0 30px rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            transition: left 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            padding: 30px 25px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 157, 0.1));
+        }
+
+        .sidebar-header h2 {
+            font-size: 24px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+
+        .menu-section {
+            margin-bottom: 30px;
+        }
+
+        .menu-section-title {
+            padding: 0 25px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .menu-item {
+            padding: 15px 25px;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-left-color: var(--primary);
+            padding-left: 30px;
+        }
+
+        .menu-item-icon {
+            font-size: 20px;
+        }
+
+        .menu-badge {
+            margin-left: auto;
+            background: var(--accent);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        header {
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(15px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .menu-toggle {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .menu-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.5);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+
+        nav ul li a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width 0.3s;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .acciones {
+            display: flex;
+            gap: 15px;
+        }
+
+        .acciones a {
+            color: var(--text);
+            text-decoration: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            transition: all 0.3s;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .acciones a:first-child {
+            border: 2px solid var(--primary);
+        }
+
+        .acciones a:first-child:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .acciones a:last-child {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+        }
+
+        .acciones a:last-child:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 25px rgba(255, 107, 157, 0.5);
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .banner {
+            position: relative;
+            height: 650px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                    radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 50%, rgba(255, 107, 157, 0.15) 0%, transparent 50%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .banner-text {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .banner-text h2 {
+            font-size: 64px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            line-height: 1.2;
+        }
+
+        .banner-text p {
+            font-size: 24px;
+            margin-bottom: 35px;
+            color: var(--text-muted);
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--success);
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 18px 45px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 700;
+            transition: all 0.3s;
+            box-shadow: 0 10px 35px rgba(0, 212, 255, 0.4);
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(0, 212, 255, 0.6);
+        }
+
+        .stats {
+            padding: 60px 0;
+            background: rgba(26, 31, 58, 0.5);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 25px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(255, 107, 157, 0.05));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            transition: all 0.3s;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .stat-number {
+            font-size: 42px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .productos {
+            padding: 100px 0;
+            background: linear-gradient(180deg, var(--dark) 0%, var(--dark-light) 100%);
+        }
+
+        .productos h2 {
+            text-align: center;
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+
+        .productos-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 18px;
+            margin-bottom: 60px;
+        }
+
+        .producto-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 35px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .producto {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(0, 212, 255, 0.2);
+            border-radius: 25px;
+            padding: 30px;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .producto::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .producto:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 25px 50px rgba(0, 212, 255, 0.4);
+            border-color: var(--primary);
+        }
+
+        .producto:hover::before {
+            transform: scaleX(1);
+        }
+
+        .producto-tag {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--accent);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .producto-img {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 157, 0.1));
+            border-radius: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--text-muted);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .producto-img::after {
+            content: '💨';
+            font-size: 80px;
+            position: absolute;
+            opacity: 0.2;
+        }
+
+        .producto h3 {
+            font-size: 22px;
+            margin-bottom: 12px;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .producto-desc {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .precio-container {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .precio {
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--primary);
+        }
+
+        .precio-desc {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .detalle-producto {
+            padding: 100px 0;
+            min-height: 100vh;
+        }
+
+        .detalle-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn-volver {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-bottom: 40px;
+        }
+
+        .btn-volver:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateX(-5px);
+        }
+
+        .detalle-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .galeria-imagenes {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .imagen-principal {
+            width: 100%;
+            height: 500px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 157, 0.1));
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            border: 2px solid rgba(0, 212, 255, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .imagen-principal img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .imagen-placeholder {
+            font-size: 120px;
+            opacity: 0.3;
+        }
+
+        .miniaturas {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .miniatura {
+            height: 100px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(255, 107, 157, 0.05));
+            border-radius: 15px;
+            border: 2px solid rgba(0, 212, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .miniatura img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .miniatura:hover, .miniatura.active {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .info-producto {
+            padding: 20px 0;
+        }
+
+        .info-producto h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .stars {
+            color: #ffd700;
+            font-size: 20px;
+        }
+
+        .reviews {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .precio-detalle {
+            font-size: 52px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 30px 0;
+        }
+
+        .precio-original {
+            text-decoration: line-through;
+            color: var(--text-muted);
+            font-size: 28px;
+            margin-left: 15px;
+        }
+
+        .descripcion-larga {
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .selector-sabor {
+            margin: 40px 0;
+        }
+
+        .selector-sabor h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .sabores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+        }
+
+        .sabor-opcion {
+            padding: 15px;
+            background: rgba(0, 212, 255, 0.05);
+            border: 2px solid rgba(0, 212, 255, 0.2);
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .sabor-opcion:hover {
+            border-color: var(--primary);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .sabor-opcion.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(255, 107, 157, 0.2));
+            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .sabor-emoji {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .sabor-nombre {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .selector-cantidad {
+            margin: 40px 0;
+        }
+
+        .selector-cantidad h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .cantidad-opciones {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .cantidad-opcion {
+            padding: 20px;
+            background: var(--card-bg);
+            border: 2px solid rgba(0, 212, 255, 0.2);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .cantidad-opcion:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .cantidad-opcion.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 157, 0.1));
+            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .cantidad-numero {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .cantidad-precio {
+            font-size: 18px;
+            color: var(--text);
+            margin-bottom: 5px;
+        }
+
+        .cantidad-descuento {
+            display: inline-block;
+            background: var(--success);
+            color: var(--dark);
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        .acciones-compra {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .acciones-compra .btn {
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 107, 157, 0.1);
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .caracteristicas {
+            margin-top: 60px;
+            padding: 40px;
+            background: var(--card-bg);
+            border-radius: 25px;
+            border: 2px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .caracteristicas h3 {
+            font-size: 24px;
+            margin-bottom: 25px;
+            color: var(--primary);
+        }
+
+        .caracteristicas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .caracteristica-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .caracteristica-icon {
+            font-size: 28px;
+        }
+
+        .caracteristica-info h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: var(--text);
+        }
+
+        .caracteristica-info p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .ofertas {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 157, 0.1));
+            padding: 100px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ofertas h2 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+
+        .descuento {
+            font-size: 100px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 30px 0;
+            line-height: 1;
+        }
+
+        .ofertas p {
+            font-size: 20px;
+            color: var(--text-muted);
+            margin: 15px 0;
+        }
+
+        footer {
+            background: rgba(10, 14, 39, 0.95);
+            border-top: 2px solid rgba(0, 212, 255, 0.2);
+            padding: 50px 0 25px;
+        }
+
+        .footer-content {
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-links {
+            margin: 25px 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        @media(max-width: 968px) {
+            .detalle-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .galeria-imagenes {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        @media(max-width: 768px) {
+            .header-content {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .banner {
+                height: 550px;
+            }
+
+            .banner-text h2 {
+                font-size: 40px;
+            }
+
+            .info-producto h1 {
+                font-size: 32px;
+            }
+
+            .precio-detalle {
+                font-size: 38px;
+            }
+
+            .acciones-compra {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h2>VapeStore Pro</h2>
+        <p>Panel de navegación</p>
+    </div>
+    <div class="sidebar-menu">
+        <div class="menu-section">
+            <div class="menu-section-title">Catálogo</div>
+            <div class="menu-item" onclick="showPage('home'); toggleSidebar()">
+                <span class="menu-item-icon">🏠</span>
+                <span>Inicio</span>
+            </div>
+            <div class="menu-item" onclick="document.getElementById('productos').scrollIntoView({behavior: 'smooth'}); toggleSidebar()">
+                <span class="menu-item-icon">🔥</span>
+                <span>Productos Destacados</span>
+            </div>
+            <div class="menu-item" onclick="document.getElementById('ofertas').scrollIntoView({behavior: 'smooth'}); toggleSidebar()">
+                <span class="menu-item-icon">⚡</span>
+                <span>Ofertas Especiales</span>
+                <span class="menu-badge">20%</span>
+            </div>
+            <div class="menu-item">
+                <span class="menu-item-icon">📦</span>
+                <span>Novedades</span>
+                <span class="menu-badge">NEW</span>
+            </div>
+        </div>
+
+        <div class="menu-section">
+            <div class="menu-section-title">Categorías</div>
+            <div class="menu-item">
+                <span class="menu-item-icon">💨</span>
+                <span>Vapes Desechables</span>
+            </div>
+            <div class="menu-item">
+                <span class="menu-item-icon">🔋</span>
+                <span>Vapes Recargables</span>
+            </div>
+            <div class="menu-item">
+                <span class="menu-item-icon">🧪</span>
+                <span>Líquidos Premium</span>
+            </div>
+            <div class="menu-item">
+                <span class="menu-item-icon">🛠️</span>
+                <span>Accesorios</span>
+            </div>
+        </div>
+
+        <div class="menu-section">
+            <div class="menu-section-title">Cuenta</div>
+            <div class="menu-item">
+                <span class="menu-item-icon">👤</span>
+                <span>Mi Perfil</span>
+            </div>
+            <div class="menu-item">
+                <span class="menu-item-icon">📊</span>
+                <span>Mis Pedidos</span>
+            </div>
+            <div class="menu-item" onclick="document.getElementById('contacto').scrollIntoView({behavior: 'smooth'}); toggleSidebar()">
+                <span class="menu-item-icon">📧</span>
+                <span>Contacto</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<header>
+    <div class="container">
+        <div class="header-content">
+            <div class="logo-container">
+                <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+                <div class="logo">
+                    <h1 onclick="showPage('home')" style="cursor: pointer;">VapeStore Pro</h1>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" onclick="showPage('home')">Inicio</a></li>
+                    <li><a href="#productos">Productos</a></li>
+                    <li><a href="#ofertas">Ofertas</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </nav>
+            <div class="acciones">
+                <a href="#">Iniciar sesión</a>
+                <a href="#">Registrarse</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div id="homePage" class="page active">
+    <section class="banner">
+        <div class="banner-text">
+            <span class="badge">✨ Envíos Express 24/48H</span>
+            <h2>Mayorista Premium<br>de Vapes en Europa</h2>
+            <p>Sin aduanas · Precios competitivos · Stock garantizado</p>
+            <a href="#productos" class="btn">Explorar Catálogo</a>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Productos</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">15K+</div>
+                <div class="stat-label">Clientes</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Soporte</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Satisfacción</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="productos" class="productos">
+        <div class="container">
+            <h2>Productos Premium</h2>
+            <p class="productos-subtitle">Los vapes más vendidos del mercado europeo</p>
+            <div class="producto-grid">
+                <div class="producto" onclick="showProductDetail(1)">
+                    <span class="producto-tag">Best Seller</span>
+                    <div class="producto-img">💨</div>
+                    <h3>Bang Kingdom Rex 32000 Puffs</h3>
+                    <p class="producto-desc">¡El vape más potente del mercado! 32000 puffs de duración extrema con garantía de entrega.</p>
+                    <div class="precio-container">
+                        <div class="precio">€4.80</div>
+                        <div class="precio-desc">/ desde 50 uds</div>
+                    </div>
+                </div>
+                <div class="producto" onclick="showProductDetail(2)">
+                    <span class="producto-tag">Popular</span>
+                    <div class="producto-img">💨</div>
+                    <h3>Vape Pro 3000 Puffs</h3>
+                    <p class="producto-desc">Perfecto para el día a día. Diseño compacto y ergonómico premium.</p>
+                    <div class="precio-container">
+                        <div class="precio">€20</div>
+                        <div class="precio-desc">/ unidad</div>
+                    </div>
+                </div>
+                <div class="producto" onclick="showProductDetail(3)">
+                    <span class="producto-tag">Premium</span>
+                    <div class="producto-img">💨</div>
+                    <h3>Vape Ultra 6000 Puffs</h3>
+                    <p class="producto-desc">Máxima capacidad y calidad profesional. El más duradero del mercado.</p>
+                    <div class="precio-container">
+                        <div class="precio">€30</div>
+                        <div class="precio-desc">/ unidad</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="ofertas" class="ofertas">
+        <div class="ofertas-content">
+            <h2>Ofertas Exclusivas</h2>
+            <div class="descuento">-20%</div>
+            <p style="font-size: 22px; font-weight: 600; color: var(--text);">¡Descuentos increíbles en compras al por mayor!</p>
+            <p>Pedidos mínimos desde 500€ · Envío gratuito a toda Europa</p>
+            <p style="margin-top: 20px;"><strong style="color: var(--success);">Stock limitado</strong> - Aprovecha antes de que se agoten</p>
+        </div>
+    </section>
+
+    <footer id="contacto">
+        <div class="footer-content">
+            <p style="font-size: 16px; margin-bottom: 10px;">&copy; 2025 VapeStore Wholesale. Todos los derechos reservados.</p>
+            <div class="footer-links">
+                <a href="#">Política de privacidad</a>
+                <a href="#">Términos y condiciones</a>
+                <a href="#">Contacto</a>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<div id="detailPage" class="page">
+    <section class="detalle-producto">
+        <div class="detalle-container">
+            <a href="#" class="btn-volver" onclick="showPage('home'); return false;">← Volver al catálogo</a>
+
+            <div class="detalle-grid">
+                <div class="galeria-imagenes">
+                    <div class="imagen-principal">
+                        <img id="imagenPrincipal" src="https://pbs.twimg.com/media/GhbF-MkXQAAP8Hu?format=jpg&name=small" alt="Producto" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                    </div>
+                    <div class="miniaturas">
+                        <div class="miniatura active" onclick="changeImage(0)">
+                            <img src="https://pbs.twimg.com/media/GhbF-MkXQAAP8Hu?format=jpg&name=small" alt="Vista 1" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="miniatura" onclick="changeImage(1)">
+                            <img src="https://pbs.twimg.com/media/GhbF-r_XwAAX4Qf?format=jpg&name=small" alt="Vista 2" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="miniatura" onclick="changeImage(2)">
+                            <img src="https://pbs.twimg.com/media/GhbF_G2W8AAhqrq?format=jpg&name=small" alt="Vista 3" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="miniatura" onclick="changeImage(3)">
+                            <img src="https://pbs.twimg.com/media/GhbF_m5XUAAW_Wk?format=jpg&name=small" alt="Vista 4" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-producto">
+                    <h1 id="productoNombre">Bang Kingdom Rex 32000 Puffs</h1>
+                    <div class="rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="reviews">(1,847 reseñas)</span>
+                    </div>
+
+                    <div class="precio-detalle" id="precioActual">€4.80</div>
+
+                    <p class="descripcion-larga" id="productoDescripcion">
+                        Experimenta la máxima satisfacción con el Vape Max 5000 Puffs. Diseñado para profesionales y mayoristas exigentes, este dispositivo ofrece una duración excepcional sin comprometer la calidad del sabor. Con tecnología de bobina de malla avanzada y control de flujo de aire ajustable, cada calada es perfecta.
+                        <br><br>
+                        Ideal para revendedores que buscan ofrecer productos premium a sus clientes. Batería de larga duración de 850mAh y capacidad de e-líquido de 13ml para hasta 5000 caladas certificadas.
+                    </p>
+
+                    <div class="selector-sabor">
+                        <h3>🎨 Selecciona tu sabor favorito (se puede mezclar):</h3>
+                        <div class="sabores-grid">
+                            <div class="sabor-opcion selected" onclick="selectSabor(this, 'https://pbs.twimg.com/media/GhbF-MkXQAAP8Hu?format=jpg&name=small')">
+                                <div class="sabor-emoji">🧊🐉</div>
+                                <div class="sabor-nombre">Hielo arándano y dragón negro</div>
+                            </div>
+                            <div class="sabor-opcion" onclick="selectSabor(this, 'https://pbs.twimg.com/media/GhbF-r_XwAAX4Qf?format=jpg&name=small')">
+                                <div class="sabor-emoji">🧊🍓</div>
+                                <div class="sabor-nombre">Hielo arándano, fresa y plátano</div>
+                            </div>
+                            <div class="sabor-opcion" onclick="selectSabor(this, 'https://pbs.twimg.com/media/GhbF_G2W8AAhqrq?format=jpg&name=small')">
+                                <div class="sabor-emoji">🫐🍇</div>
+                                <div class="sabor-nombre">Arándano frambuesa y melocotón mango</div>
+                            </div>
+                            <div class="sabor-opcion" onclick="selectSabor(this, 'https://pbs.twimg.com/media/GhbF_m5XUAAW_Wk?format=jpg&name=small')">
+                                <div class="sabor-emoji">🍉🥭</div>
+                                <div class="sabor-nombre">Sandía con arándanos y mango con fresas</div>
+                            </div>
+                            <div class="sabor-opcion" onclick="selectSabor(this, 'https://pbs.twimg.com/media/GhbGAHBXgAAuRf0?format=jpg&name=small')">
+                                <div class="sabor-emoji">🐂🍉</div>
+                                <div class="sabor-nombre">Red Bull y Watermeon de arándanos</div>
+                            </div>
+                            <div class="sabor-opcion" onclick="selectSabor(this, 'https://pbs.twimg.com/media/GhbGAltWYAA6R-B?format=jpg&name=small')">
+                                <div class="sabor-emoji">🐂🍬</div>
+                                <div class="sabor-nombre">Red Bull & Watermeon Bubble Candy</div>
+                            </div>
+                            <div class="sabor-opcion" onclick="selectSabor(this, 'https://pbs.twimg.com/media/GhbGBCMWgAAJ6E-?format=jpg&name=small')">
+                                <div class="sabor-emoji">🍓🥝</div>
+                                <div class="sabor-nombre">Fresa Kiwi & Manzana ácida frambuesa</div>
+                            </div>
+                            <div class="sabor-opcion" onclick="selectSabor(this, 'https://pbs.twimg.com/media/GhbGBheWsAAy2Rr?format=jpg&name=small')">
+                                <div class="sabor-emoji">🍧🥝</div>
+                                <div class="sabor-nombre">Helado de fresa, kiwi y melocotón</div>
+                            </div>
+                            <div class="sabor-opcion" onclick="selectSabor(this, 'https://pbs.twimg.com/media/GhbGB-6XUAIBZhr?format=jpg&name=small')">
+                                <div class="sabor-emoji">🧊🍇</div>
+                                <div class="sabor-nombre">Hielo de fresa, sandía y uva</div>
+                            </div>
+                            <div class="sabor-opcion" onclick="selectSabor(this, 'https://pbs.twimg.com/media/GhbGCabWIAAh4nG?format=jpg&name=small')">
+                                <div class="sabor-emoji">🍓🥝</div>
+                                <div class="sabor-nombre">Fresa sandía y kiwi fruta de la pasión</div>
+                            </div>
+                            <div class="sabor-opcion" onclick="selectSabor(this, 'https://pbs.twimg.com/media/GhbGC5fWcAADpPq?format=jpg&name=small')">
+                                <div class="sabor-emoji">🧊🍉</div>
+                                <div class="sabor-nombre">Hielo de sandía y menta con arándanos</div>
+                            </div>
+                            <div class="sabor-opcion" onclick="selectSabor(this, 'https://pbs.twimg.com/media/GhbGDXyWMAAdTxC?format=jpg&name=small')">
+                                <div class="sabor-emoji">🍉🥭</div>
+                                <div class="sabor-nombre">Sandía helada & Fresa Mango</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="selector-cantidad">
+                        <h3>📦 Selecciona la cantidad (precio por unidad):</h3>
+                        <div class="cantidad-opciones">
+                            <div class="cantidad-opcion selected" onclick="selectCantidad(this, 4.80, 0)" data-cantidad="50">
+                                <div class="cantidad-numero">50-99 uds</div>
+                                <div class="cantidad-precio">€4.80/ud</div>
+                                <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Total: €240 - €475</div>
+                            </div>
+                            <div class="cantidad-opcion" onclick="selectCantidad(this, 4.50, 6)" data-cantidad="100">
+                                <div class="cantidad-numero">100-199 uds</div>
+                                <div class="cantidad-precio">€4.50/ud</div>
+                                <span class="cantidad-descuento">-6%</span>
+                                <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Total: €450 - €895</div>
+                            </div>
+                            <div class="cantidad-opcion" onclick="selectCantidad(this, 4.20, 13)" data-cantidad="200">
+                                <div class="cantidad-numero">200-299 uds</div>
+                                <div class="cantidad-precio">€4.20/ud</div>
+                                <span class="cantidad-descuento">-13%</span>
+                                <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Total: €840 - €1,255</div>
+                            </div>
+                            <div class="cantidad-opcion" onclick="selectCantidad(this, 4.05, 16)" data-cantidad="300">
+                                <div class="cantidad-numero">300-499 uds</div>
+                                <div class="cantidad-precio">€4.05/ud</div>
+                                <span class="cantidad-descuento">-16%</span>
+                                <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Total: €1,215 - €2,020</div>
+                            </div>
+                            <div class="cantidad-opcion" onclick="selectCantidad(this, 3.65, 24)" data-cantidad="500">
+                                <div class="cantidad-numero">500-999 uds</div>
+                                <div class="cantidad-precio">€3.65/ud</div>
+                                <span class="cantidad-descuento">-24%</span>
+                                <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Total: €1,825 - €3,645</div>
+                            </div>
+                            <div class="cantidad-opcion" onclick="selectCantidad(this, 3.55, 26)" data-cantidad="1000">
+                                <div class="cantidad-numero">1000+ uds</div>
+                                <div class="cantidad-precio">€3.55/ud</div>
+                                <span class="cantidad-descuento">-26%</span>
+                                <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">¡Mejor precio garantizado!</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="acciones-compra">
+                        <button class="btn">🛒 Añadir al carrito</button>
+                        <button class="btn btn-secondary">💬 Contactar</button>
+                    </div>
+
+                    <div class="caracteristicas">
+                        <h3>✨ Características destacadas</h3>
+                        <div class="caracteristicas-grid">
+                            <div class="caracteristica-item">
+                                <span class="caracteristica-icon">💨</span>
+                                <div class="caracteristica-info">
+                                    <h4>32,000 Puffs</h4>
+                                    <p>Máxima duración del mercado</p>
+                                </div>
+                            </div>
+                            <div class="caracteristica-item">
+                                <span class="caracteristica-icon">🔋</span>
+                                <div class="caracteristica-info">
+                                    <h4>Batería recargable</h4>
+                                    <p>650mAh con USB-C</p>
+                                </div>
+                            </div>
+                            <div class="caracteristica-item">
+                                <span class="caracteristica-icon">📱</span>
+                                <div class="caracteristica-info">
+                                    <h4>Pantalla LED</h4>
+                                    <p>Nivel batería y líquido</p>
+                                </div>
+                            </div>
+                            <div class="caracteristica-item">
+                                <span class="caracteristica-icon">🚚</span>
+                                <div class="caracteristica-info">
+                                    <h4>Envío 18-23 días</h4>
+                                    <p>Aduanas despachadas</p>
+                                </div>
+                            </div>
+                            <div class="caracteristica-item">
+                                <span class="caracteristica-icon">✅</span>
+                                <div class="caracteristica-info">
+                                    <h4>100% Garantía</h4>
+                                    <p>Entrega garantizada</p>
+                                </div>
+                            </div>
+                            <div class="caracteristica-item">
+                                <span class="caracteristica-icon">👑</span>
+                                <div class="caracteristica-info">
+                                    <h4>Calidad Premium</h4>
+                                    <p>Bang Kingdom Rex</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    const productos = {
+        1: {
+            nombre: 'Bang Kingdom Rex 32000 Puffs',
+            precioBase: 4.80,
+            descripcion: 'Experimenta la máxima satisfacción con el Bang Kingdom Rex 32000 Puffs. Diseñado para profesionales y mayoristas exigentes, este dispositivo ofrece una duración excepcional sin comprometer la calidad del sabor. Con tecnología de bobina de malla avanzada y control de flujo de aire ajustable, cada calada es perfecta.<br><br>Ideal para revendedores que buscan ofrecer productos premium a sus clientes. Batería de larga duración de 650mAh y capacidad de e-líquido de 28ml para hasta 32000 caladas certificadas.'
+        },
+        2: {
+            nombre: 'Vape Pro 3000 Puffs',
+            precioBase: 20,
+            descripcion: 'El Vape Pro 3000 Puffs combina portabilidad con rendimiento excepcional. Perfecto para el usuario diario que busca calidad sin complicaciones. Su diseño compacto y ergonómico lo hace ideal para llevar a cualquier lugar.<br><br>Con 600mAh de batería y 8ml de líquido premium, garantiza hasta 3000 caladas de vapor suave y consistente. Ideal para mayoristas que buscan productos de calidad a precio competitivo.'
+        },
+        3: {
+            nombre: 'Vape Ultra 6000 Puffs',
+            precioBase: 30,
+            descripcion: 'El Vape Ultra 6000 Puffs es el rey de la duración. Diseñado para aquellos que buscan lo mejor de lo mejor, este dispositivo premium ofrece la máxima capacidad del mercado. Tecnología de última generación con bobina de malla doble para una producción de vapor incomparable.<br><br>Con una impresionante batería de 1000mAh y 15ml de líquido premium, alcanza hasta 6000 caladas. El producto más vendido entre mayoristas premium de toda Europa.'
+        }
+    };
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.querySelector('.sidebar-overlay');
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+    }
+
+    function showPage(page) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        if (page === 'home') {
+            document.getElementById('homePage').classList.add('active');
+            window.scrollTo(0, 0);
+        } else if (page === 'detail') {
+            document.getElementById('detailPage').classList.add('active');
+            window.scrollTo(0, 0);
+        }
+    }
+
+    function showProductDetail(productId) {
+        const producto = productos[productId];
+        document.getElementById('productoNombre').textContent = producto.nombre;
+        document.getElementById('productoDescripcion').innerHTML = producto.descripcion;
+        document.getElementById('precioActual').textContent = '€' + producto.precioBase.toFixed(2);
+
+        document.querySelectorAll('.cantidad-opcion').forEach(op => op.classList.remove('selected'));
+        document.querySelectorAll('.cantidad-opcion')[0].classList.add('selected');
+
+        showPage('detail');
+    }
+
+    function changeImage(index) {
+        const images = [
+            'https://pbs.twimg.com/media/GhbF-MkXQAAP8Hu?format=jpg&name=small',
+            'https://pbs.twimg.com/media/GhbF-r_XwAAX4Qf?format=jpg&name=small',
+            'https://pbs.twimg.com/media/GhbF_G2W8AAhqrq?format=jpg&name=small',
+            'https://pbs.twimg.com/media/GhbF_m5XUAAW_Wk?format=jpg&name=small'
+        ];
+
+        document.getElementById('imagenPrincipal').src = images[index];
+
+        document.querySelectorAll('.miniatura').forEach(m => m.classList.remove('active'));
+        document.querySelectorAll('.miniatura')[index].classList.add('active');
+    }
+
+    function selectSabor(element, imageUrl) {
+        document.querySelectorAll('.sabor-opcion').forEach(s => s.classList.remove('selected'));
+        element.classList.add('selected');
+
+        // Cambiar la imagen principal al sabor seleccionado
+        document.getElementById('imagenPrincipal').src = imageUrl;
+    }
+
+    function selectCantidad(element, precio, descuento) {
+        document.querySelectorAll('.cantidad-opcion').forEach(c => c.classList.remove('selected'));
+        element.classList.add('selected');
+        document.getElementById('precioActual').textContent = '€' + precio.toFixed(2);
+    }
+</script>
+</body>
+</html>
